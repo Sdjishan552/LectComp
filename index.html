@@ -142,8 +142,11 @@ function setNext(){const id=NS,f=unf()[0];if(!id)return toast('Pick a chapter fi
 function stat(i){const b=BL[i],t=today();return full(b)?'done':D[i]>t?'locked':D[i]<t?'over':'today'}
 function toast(m){const e=document.createElement('div');e.className='toast';e.textContent=m;document.body.append(e);setTimeout(()=>e.remove(),2200)}
 function pop(n=45){const C=['#6c5ce7','#00b894','#fd79a8','#fdcb6e','#0984e3','#e17055'];for(let i=0;i<n;i++){const e=document.createElement('i');e.className='cf';e.style.cssText=`left:${Math.random()*100}vw;background:${C[i%6]};animation-delay:${Math.random()*.5}s;border-radius:${i%2?'50%':'2px'}`;document.body.append(e);setTimeout(()=>e.remove(),2600)}}
-function tick(i,n){const b=BL[i],id=b.ch.id,c=S.done[id]||0;if(D[i]>today())return toast('🔒 Locked until '+fd(D[i]));
- let up;if(n==c+1)up=1;else if(n==c)up=-1;else return toast('Finish the earlier lecture first');
+function askUndo(i,n){const b=BL[i],m=document.createElement('div');m.className='md';
+ m.innerHTML=`<div><h3>↩️ Uncheck this lecture?</h3><div class="sub">${b.ch.name} · ${lab(b.ch,n)} will go back to “not done”.</div><button class="btn" id="uy">Yes, uncheck it</button><button class="ghost" style="width:100%" id="un">No, keep it checked</button></div>`;
+ document.body.append(m);m.onclick=e=>{if(e.target==m)m.remove()};$('#un').onclick=()=>m.remove();$('#uy').onclick=()=>{m.remove();tick(i,n,true)}}
+function tick(i,n,ok){const b=BL[i],id=b.ch.id,c=S.done[id]||0;if(D[i]>today())return toast('🔒 Locked until '+fd(D[i]));
+ let up;if(n==c+1)up=1;else if(n==c){if(!ok)return askUndo(i,n);up=-1}else return toast('Finish the earlier lecture first');
  S.done[id]=c+up;const k=today();S.log[k]=Math.max(0,(S.log[k]||0)+up);save();render();if(up>0&&full(b)){pop(70);toast('🎉 '+b.ch.name+' block complete!')}else if(up>0)pop(14)}
 function card(i,n0){const b=BL[i],c=b.ch,st=stat(i),dg=!full(b)&&(st=='over'||SH[i]>0);let r='';
  for(let n=b.a;n<=b.b;n++){const o=(S.done[c.id]||0)>=n;r+=`<div class="lec ${o?'on':''}" onclick="tick(${i},${n})"><span class="ck">${o?'✓':''}</span><span>${lab(c,n)}</span><small>${n}/${c.total}</small></div>`}
