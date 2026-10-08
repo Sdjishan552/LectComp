@@ -1,7 +1,7 @@
 /* Bank Prep Tracker – service worker.
    Only caches the app's own files so the app opens like a real app.
    Your progress is NOT stored here – it lives in Firebase (Firestore). */
-const VERSION = 'v1';
+const VERSION = 'v2';
 const SHELL = 'bpt-shell-' + VERSION;
 const LIBS = 'bpt-libs-v1';
 const FILES = ['./', 'index.html', 'manifest.json', 'firebase-config.js',
